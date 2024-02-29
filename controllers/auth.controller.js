@@ -10,5 +10,12 @@ res.render('register')
 
 
 exports.postRegiterData=(req,res,next)=>{
-authmodel.registerFunctionModel(req.body.email,req.body.password)
+authmodel.registerFunctionModel(req.body.email,req.body.password).then((user)=>{
+res.render('/login')
+}).catch((msg)=>{
+
+    console.log(msg)
+})
+
+
 }

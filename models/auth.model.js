@@ -30,6 +30,7 @@ exports.registerFunctionModel = (email, password) => {
         }).then((user) => {
             mongoose.disconnect();
             resolve('registered');
+       
         }).catch((err) => {
             mongoose.disconnect();
             reject(err);

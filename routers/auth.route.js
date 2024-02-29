@@ -1,15 +1,12 @@
 
 const route=require('express').Router()
+const Authcontroller = require ("../controllers/auth.controller")
+
+const body=require('express').urlencoded({extended:true})
 
 
+route.get('/register',Authcontroller.getRegisterPage)
+route.post('/register',body,Authcontroller.postRegiterData)
 
-
-route.get('/register',(req,res,next)=>{
-
-res.render('register')
-
-
-
-})
 
 module.exports=route

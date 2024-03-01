@@ -1,16 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const AuthController = require("../controllers/auth.controller");
 
-const route=require('express').Router()
-const Authcontroller = require ("../controllers/auth.controller")
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
-const body=require('express').urlencoded({extended:true})
+router.get('/register', AuthController.getRegisterPage);
+router.post('/register', urlencodedParser, AuthController.postRegisterData);
 
+router.get('/login', AuthController.getLoginPage);
+router.post('/login', urlencodedParser, AuthController.postLoginData);
 
-route.get('/register',Authcontroller.getRegisterPage)
-route.post('/register',body,Authcontroller.postRegiterData)
-
-
-route.get('/login',Authcontroller.getloginpage)
-route.post('/login',body,Authcontroller.PostLoginData)
-
-
-module.exports=route
+module.exports = router;

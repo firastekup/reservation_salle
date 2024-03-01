@@ -1,38 +1,32 @@
-const authmodel=require('../models/auth.model')
+const authmodel = require('../models/auth.model');
 
-
-
-exports.getRegisterPage=(req,res,next)=>
-{
-res.render('register')
-
+exports.getRegisterPage = (req, res, next) => {
+    res.render('register');
 }
 
-exports.postRegiterData=(req,res,next)=>{
-authmodel.registerFunctionModel(req.body.email,req.body.password).then((user)=>{
-res.render('/login')
-}).catch((msg)=>{
-
-    console.log(msg)
-})
-
+exports.postRegisterData = (req, res, next) => {
+    authmodel.registerFunctionModel(req.body.email, req.body.password)
+        .then(() => {
+            res.redirect('/login');
+        })
+        .catch((msg) => {
+            console.log(msg);
+            // handle error appropriately, e.g., render an error page
+        });
 }
 
-
-
-
-exports.getloginpage=(req,res,next)=>
-{
-res.render('login')
-
+exports.getLoginPage = (req, res, next) => {
+    res.render('login');
 }
 
-
-
-
-
-exports.PostLoginData=(req,res,next)=>{
-    authmodel.loginmodelfunctionModel(req.body.email,req.body.password).then((id)=>{
-        req.session.userId=id
-    }).catch((err)=>{console.log(err)})
+exports.postLoginData = (req, res, next) => {
+    authmodel.loginFunctionModel(req.body.email, req.body.password)
+        .then((userId) => {
+            req.session.userId = userId;
+            res.redirect('/'); // Redirect to homepage or any other page as needed
+        })
+        .catch((err) => {
+            console.log(err);
+            // handle error appropriately, e.g., render an error page
+        });
 }

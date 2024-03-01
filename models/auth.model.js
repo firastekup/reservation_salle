@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-var schemaAuth = mongoose.Schema({
+const schemaAuth = mongoose.Schema({
     email: String,
     password: String
 });
 
-var User = mongoose.model('user', schemaAuth);
-var url = "mongodb://localhost:27017/projet_node";
+const User = mongoose.model('user', schemaAuth);
+const url = "mongodb://localhost:27017/projet_node";
 
 exports.registerFunctionModel = (email, password) => {
     return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ exports.registerFunctionModel = (email, password) => {
         }).then((user) => {
             if (user) {
                 mongoose.disconnect();
-                reject('email is used');
+                reject('Email is already used');
             } else {
                 return bcrypt.hash(password, 10);
             }
@@ -28,7 +28,7 @@ exports.registerFunctionModel = (email, password) => {
             return user.save();
         }).then((user) => {
             mongoose.disconnect();
-            resolve('registered');
+            resolve('Registered successfully');
         }).catch((err) => {
             mongoose.disconnect();
             reject(err);
@@ -36,8 +36,8 @@ exports.registerFunctionModel = (email, password) => {
     });
 };
 
-exports.loginFunctionModel = (email, password) => { // Correction: Les paramètres doivent être (email, password) au lieu de ((email,password))
-    return new Promise((resolve, reject) => { // Correction: Utilisez `Promise` au lieu de `promise`
+exports.loginFunctionModel = (email, password) => {
+    return new Promise((resolve, reject) => {
         mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
             return User.findOne({ email: email });
         }).then((user) => {
@@ -45,7 +45,7 @@ exports.loginFunctionModel = (email, password) => { // Correction: Les paramètr
                 bcrypt.compare(password, user.password).then((verif) => {
                     if (verif) {
                         mongoose.disconnect();
-                        resolve(user._id); // Correction: Utilisez `user._id` au lieu de `'user._id'`
+                        resolve(user._id);
                     } else {
                         mongoose.disconnect();
                         reject('Invalid password');

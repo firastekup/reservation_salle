@@ -1,9 +1,26 @@
 const express = require('express');
 const path=require('path')
 const dotenv = require('dotenv');
+const session=require('express-session')
+const mongodbstore=require('connect-mongodb-session')(session)
+const app = express();
+
+var store=new  mongodbstore({
+
+    uri:'mongodb://localhost:27017/projet_node',
+    collection: 'sessions'
+})
+app.use(session({
+    secret:'this is my secert key',
+    store:store,
+    resave:true,
+    saveUninitialized:true
+
+}))
+
+
 
 const authRouter = require('./routers/auth.route');
-const app = express();
 
 app.use(express.static(path.join(__dirname,'assets')))
 app.set('view engine','ejs')
@@ -22,9 +39,9 @@ app.set('view engine', 'ejs');
 // Définir le chemin vers les fichiers de vue
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/login', (req, res,next) => {
-    res.render('login');
-});
+//app.get('/login', (req, res,next) => {
+   // res.render('login');
+//});
 
 
 //app.get('/register', (req, res) => {

@@ -9,4 +9,8 @@ route.get('/register',Authcontroller.getRegisterPage)
 route.post('/register',body,Authcontroller.postRegiterData)
 
 
+route.get('/login',Authcontroller.getloginpage)
+route.post('/login',body,Authcontroller.PostLoginData)
+
+
 module.exports=route

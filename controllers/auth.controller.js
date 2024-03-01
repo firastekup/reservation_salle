@@ -8,7 +8,6 @@ res.render('register')
 
 }
 
-
 exports.postRegiterData=(req,res,next)=>{
 authmodel.registerFunctionModel(req.body.email,req.body.password).then((user)=>{
 res.render('/login')
@@ -17,5 +16,23 @@ res.render('/login')
     console.log(msg)
 })
 
+}
 
+
+
+
+exports.getloginpage=(req,res,next)=>
+{
+res.render('login')
+
+}
+
+
+
+
+
+exports.PostLoginData=(req,res,next)=>{
+    authmodel.loginmodelfunctionModel(req.body.email,req.body.password).then((id)=>{
+        req.session.userId=id
+    }).catch((err)=>{console.log(err)})
 }

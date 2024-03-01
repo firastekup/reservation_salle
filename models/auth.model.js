@@ -3,13 +3,18 @@ const bcrypt = require('bcrypt');
 
 const schemaAuth = mongoose.Schema({
     email: String,
-    password: String
+    password: String,
+    firstName:String,
+    lastName:String,
+    phoneNumber:String,
+    Cin:String
+
 });
 
 const User = mongoose.model('user', schemaAuth);
 const url = "mongodb://localhost:27017/projet_node";
 
-exports.registerFunctionModel = (email, password) => {
+exports.registerFunctionModel = (email, password,firstName,lastName,phoneNumber,cin) => {
     return new Promise((resolve, reject) => {
         mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
             return User.findOne({ email: email });
@@ -23,6 +28,10 @@ exports.registerFunctionModel = (email, password) => {
         }).then((hashedPassword) => {
             let user = new User({
                 email: email,
+                firstName: firstName,
+                lastName:lastName,
+                phoneNumber:phoneNumber,
+                cin:cin,
                 password: hashedPassword
             });
             return user.save();

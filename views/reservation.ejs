@@ -1,0 +1,17 @@
+<form action="/reservation" method="POST">
+    <label for="startDate">Date de début:</label>
+    <input type="date" id="startDate" name="startDate" required>
+
+    <label for="endDate">Date de fin:</label>
+    <input type="date" id="endDate" name="endDate" required>
+
+    <label for="roomId">Salle de réunion:</label>
+    <select id="roomId" name="roomId">
+        <option value="1">Salle A</option>
+        <option value="2">Salle B</option>
+        <option value="3">Salle C</option>
+        <!-- Ajoutez d'autres salles de réunion si nécessaire -->
+    </select>
+
+    <button type="submit">Réserver</button>
+</form>

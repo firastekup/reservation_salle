@@ -1,60 +1,60 @@
 const express = require('express');
-const path=require('path')
+const path = require('path');
 const dotenv = require('dotenv');
-const session=require('express-session')
-const mongodbstore=require('connect-mongodb-session')(session)
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const bodyParser = require('body-parser'); 
+const mongoose = require('mongoose');
+
+// Importer les routes
+const authRouter = require('./routers/auth.route');
+const reservationRouter = require('./routers/reservation.route');
+
 const app = express();
 
-var store=new  mongodbstore({
-
-    uri:'mongodb://localhost:27017/projet_node',
+// Configuration de MongoDB Store pour stocker les sessions
+const store = new MongoDBStore({
+    uri: 'mongodb://localhost:27017/projet_node',
     collection: 'sessions'
-})
+});
+
+// Configuration de la session
 app.use(session({
-    secret:'this is my secert key',
-    store:store,
-    resave:true,
-    saveUninitialized:true
+    secret: 'this is my secret key',
+    store: store,
+    resave: true,
+    saveUninitialized: true
+}));
 
-}))
+// Configuration de body-parser pour analyser les données POST
+app.use(bodyParser.urlencoded({ extended: true }));
 
+// Configurer les vues et les fichiers statiques
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'assets')));
 
-
-const authRouter = require('./routers/auth.route');
-
-app.use(express.static(path.join(__dirname,'assets')))
-app.set('view engine','ejs')
-app.set('views','views')
-
-
-
-
-
-
-
+// Charger les variables d'environnement
 dotenv.config();
 
-app.set('view engine', 'ejs');
+// Connecter à la base de données MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/projet_node', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log("Connecté à la base de données MongoDB");
+})
+.catch((error) => {
+    console.error("Erreur de connexion à la base de données MongoDB:", error);
+});
 
-// Définir le chemin vers les fichiers de vue
-app.set('views', path.join(__dirname, 'views'));
-
-//app.get('/login', (req, res,next) => {
-   // res.render('login');
-//});
-
-
-//app.get('/register', (req, res) => {
-  //  res.render('login');
-//});
-
-app.use('/',authRouter)
-
-
+// Utiliser les routes
+app.use('/', authRouter);
+app.use('/', reservationRouter);
 
 const PORT = process.env.PORT || 3000;
 
-// Démarrer le serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
 });

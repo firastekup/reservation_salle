@@ -2,6 +2,47 @@
 
 const Reservation = require('../models/reservation.model');
 
+exports.getAvailabilityPage = async (req, res, next) => {
+    try {
+        // Récupérer les dates disponibles pour chaque salle
+        const availability = await getAvailability();
+
+        // Passer les données à la vue
+        res.render('availability', { availability: availability });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Une erreur est survenue lors de la récupération des dates disponibles.");
+    }
+};
+
+async function getAvailability() {
+    try {
+        // Récupérer toutes les réservations
+        const reservations = await Reservation.find();
+
+        // Regrouper les réservations par salle
+        const availability = {};
+        reservations.forEach(reservation => {
+            if (!availability[reservation.roomId]) {
+                availability[reservation.roomId] = [];
+            }
+            availability[reservation.roomId].push({ startDate: reservation.startDate, endDate: reservation.endDate });
+        });
+
+        return availability;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
+
+
+
+
+
+
 exports.getReservationPage = (req, res, next) => {
     // Afficher la page de réservation
     res.render('reservation');

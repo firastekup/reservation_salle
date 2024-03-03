@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disponibilité des salles</title>
+</head>
+<body>
+    <h1>Disponibilité des salles</h1>
+    <% Object.entries(availability).forEach(([roomId, dates]) => { %>
+        <h2>Salle <%= roomId %></h2>
+        <ul>
+            <% dates.forEach(date => { %>
+                <li><%= date.startDate %> - <%= date.endDate %></li>
+            <% }); %>
+        </ul>
+    <% }); %>
+</body>
+</html>

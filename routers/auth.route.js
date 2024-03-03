@@ -11,4 +11,7 @@ router.post('/register', urlencodedParser, AuthController.postRegisterData);
 router.get('/login', AuthController.getLoginPage);
 router.post('/login', urlencodedParser, AuthController.postLoginData);
 
+
+router.post('/logout',AuthController.logoutfunctioncontroller)
+
 module.exports = router;

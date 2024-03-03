@@ -8,19 +8,20 @@ const schemaAuth = mongoose.Schema({
     lastName:String,
     phoneNumber:String,
     Cin:String
-
 });
 
 const User = mongoose.model('user', schemaAuth);
 const url = "mongodb://localhost:27017/projet_node";
 
+// Connexion à MongoDB au démarrage de l'application
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("Connected to MongoDB"))
+    .catch(err => console.error("Connection to MongoDB failed:", err));
+
 exports.registerFunctionModel = (email, password,firstName,lastName,phoneNumber,cin) => {
     return new Promise((resolve, reject) => {
-        mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-            return User.findOne({ email: email });
-        }).then((user) => {
+        User.findOne({ email: email }).then((user) => {
             if (user) {
-                mongoose.disconnect();
                 reject('Email is already used');
             } else {
                 return bcrypt.hash(password, 10);
@@ -35,11 +36,9 @@ exports.registerFunctionModel = (email, password,firstName,lastName,phoneNumber,
                 password: hashedPassword
             });
             return user.save();
-        }).then((user) => {
-            mongoose.disconnect();
+        }).then(() => {
             resolve('Registered successfully');
         }).catch((err) => {
-            mongoose.disconnect();
             reject(err);
         });
     });
@@ -47,25 +46,19 @@ exports.registerFunctionModel = (email, password,firstName,lastName,phoneNumber,
 
 exports.loginFunctionModel = (email, password) => {
     return new Promise((resolve, reject) => {
-        mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-            return User.findOne({ email: email });
-        }).then((user) => {
-            if (user) {
+        User.findOne({ email: email }).then((user) => {
+            if (!user) {
+                reject('User not found');
+            } else {
                 bcrypt.compare(password, user.password).then((verif) => {
                     if (verif) {
-                        mongoose.disconnect();
                         resolve(user._id);
                     } else {
-                        mongoose.disconnect();
                         reject('Invalid password');
                     }
                 });
-            } else {
-                mongoose.disconnect();
-                reject('User not found');
             }
         }).catch((err) => {
-            mongoose.disconnect();
             reject(err);
         });
     });

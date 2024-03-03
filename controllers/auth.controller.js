@@ -23,10 +23,17 @@ exports.postLoginData = (req, res, next) => {
     authmodel.loginFunctionModel(req.body.email, req.body.password)
         .then((userId) => {
             req.session.userId = userId;
-            res.redirect('/'); // Redirect to homepage or any other page as needed
+            res.redirect('/reservation'); // Redirect to homepage or any other page as needed
         })
         .catch((err) => {
             console.log(err);
             // handle error appropriately, e.g., render an error page
         });
+}
+
+exports.logoutfunctioncontroller=(req,res,next)=>{
+req.session.destroy(()=>{
+    res.redirect('/login')
+})
+
 }
